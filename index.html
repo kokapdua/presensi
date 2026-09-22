@@ -8,11 +8,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#ffffff" id="metaThemeColor">
 
     <title>Presensi - UPT Puskesmas Kokap II</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Konfigurasi Tailwind untuk mendukung Class-based Dark Mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -30,7 +36,6 @@
             width: 100% !important;
             min-height: 100% !important;
             height: 100dvh;
-            background-color: #ffffff;
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
@@ -41,7 +46,6 @@
             width: 100%;
             height: 100%;
             min-height: 100dvh;
-            background-color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -52,7 +56,6 @@
         /* Tampilan Khusus Layar Komputer / Desktop */
         @media (min-width: 640px) {
             body {
-                background-color: #f1f5f9;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -66,46 +69,60 @@
                 max-height: 94vh;
                 border-radius: 1.5rem;
                 box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-                border: 1px solid #e2e8f0;
             }
         }
     </style>
 </head>
-<body>
+<body class="bg-white dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
 
-    <div id="appCard">
+    <div id="appCard" class="bg-white dark:bg-slate-900 border-0 sm:border border-gray-200 dark:border-slate-800">
         <div> 
-           <!-- Header Logo & Judul (Pakai Gambar Logo) -->
-<div class="text-center mb-4 pt-2 sm:pt-0">
-    <div class="w-16 h-16 mx-auto mb-2 flex items-center justify-center">
-        <img src="https://lh3.googleusercontent.com/d/1jQjXzfrhmROh-9N8-xvE686iq7NliAFs" alt="Logo Puskesmas Kokap II" class="w-full h-full object-contain">
-    </div>
-    <h1 class="text-base sm:text-lg font-bold text-gray-900 leading-tight">Presensi</h1>
-    <p class="text-[11px] sm:text-xs text-gray-500 mt-0.5">UPT Puskesmas Kokap II</p>
-</div>
+            <!-- TOMBOL TOGGLE TEMA (Pojok Kanan Atas) -->
+            <div class="flex justify-end items-center mb-1">
+                <div class="inline-flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl border border-gray-200 dark:border-slate-700 text-xs">
+                    <button onclick="setTheme('light')" id="themeLightBtn" class="px-2 py-1 rounded-lg text-gray-500 dark:text-gray-400 hover:text-blue-600 transition-all" title="Mode Terang">
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                    <button onclick="setTheme('system')" id="themeSystemBtn" class="px-2.5 py-1 rounded-lg font-bold text-gray-700 dark:text-gray-200 transition-all" title="Ikuti Sistem">
+                        <i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto
+                    </button>
+                    <button onclick="setTheme('dark')" id="themeDarkBtn" class="px-2 py-1 rounded-lg text-gray-500 dark:text-gray-400 hover:text-blue-400 transition-all" title="Mode Gelap">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header Logo & Judul (Pakai Gambar Logo) -->
+            <div class="text-center mb-4 pt-1 sm:pt-0">
+                <div class="w-16 h-16 mx-auto mb-2 flex items-center justify-center">
+                    <img src="https://lh3.googleusercontent.com/d/1jQjXzfrhmROh-9N8-xvE686iq7NliAFs" alt="Logo Puskesmas Kokap II" class="w-full h-full object-contain">
+                </div>
+                <h1 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-tight">Presensi</h1>
+                <p class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5">UPT Puskesmas Kokap II</p>
+            </div>
 
             <!-- TAB SWITCHER (Login / Daftar) -->
-            <div id="authTabs" class="flex bg-gray-100 p-1 rounded-xl mb-4">
-                <button onclick="switchTab('login')" id="tabLoginBtn" class="flex-1 py-2 text-xs font-bold rounded-lg bg-white text-blue-600 shadow-sm transition-all">Masuk</button>
-                <button onclick="switchTab('register')" id="tabRegisterBtn" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 transition-all">Daftar Akun</button>
+            <div id="authTabs" class="flex bg-gray-100 dark:bg-slate-800 p-1 rounded-xl mb-4 border border-gray-200 dark:border-slate-700/60">
+                <button onclick="switchTab('login')" id="tabLoginBtn" class="flex-1 py-2 text-xs font-bold rounded-lg bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm transition-all">Masuk</button>
+                <button onclick="switchTab('register')" id="tabRegisterBtn" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all">Daftar Akun</button>
             </div>
 
             <!-- VIEW 1A: FORM LOGIN NIP/NIK + PASSWORD -->
             <div id="loginView" class="space-y-3">
                 <div>
-                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 uppercase mb-1">Nomor NIP / NIK Pegawai</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Nomor NIP / NIK Pegawai</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-id-card"></i></span>
                         <input type="text" id="nikInput" placeholder="Masukkan NIP atau NIK" onkeydown="handleKeyInput(event)"
-                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 uppercase mb-1">Password</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Password</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-lock"></i></span>
                         <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="handleKeyInput(event)"
-                            class="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
                     </div>
                 </div>
                 <button onclick="handleLogin()" id="loginBtn" 
@@ -114,7 +131,7 @@
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
                 <div class="text-right pt-1">
-                    <button onclick="resetPasswordWhatsApp()" class="text-xs text-blue-600 hover:underline font-semibold flex items-center justify-end space-x-1.5 ml-auto">
+                    <button onclick="resetPasswordWhatsApp()" class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold flex items-center justify-end space-x-1.5 ml-auto">
                         <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
                         <span>Lupa Password? Reset via WhatsApp</span>
                     </button>
@@ -125,28 +142,28 @@
             <!-- VIEW 1B: FORM PENDAFTARAN -->
             <div id="registerView" class="hidden space-y-2.5">
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Nomor NIP / NIK</label>
-                    <input type="text" id="regNik" placeholder="198001012010011001" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Nomor NIP / NIK</label>
+                    <input type="text" id="regNik" placeholder="198001012010011001" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Nama Lengkap & Gelar</label>
-                    <input type="text" id="regNama" placeholder="Dr. Budi Santoso" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Nama Lengkap & Gelar</label>
+                    <input type="text" id="regNama" placeholder="Dr. Budi Santoso" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Jabatan / Unit</label>
-                    <input type="text" id="regJabatan" placeholder="Dokter Umum / Staf BOK" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Jabatan / Unit</label>
+                    <input type="text" id="regJabatan" placeholder="Dokter Umum / Staf BOK" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Nomor HP / WhatsApp</label>
-                    <input type="text" id="regNoHp" placeholder="081234567890" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Nomor HP / WhatsApp</label>
+                    <input type="text" id="regNoHp" placeholder="081234567890" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Buat Password</label>
-                    <input type="password" id="regPassword" placeholder="••••••••" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Buat Password</label>
+                    <input type="password" id="regPassword" placeholder="••••••••" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-0.5">Ketik Ulang Password</label>
-                    <input type="password" id="regPasswordConfirm" placeholder="••••••••" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase mb-0.5">Ketik Ulang Password</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="••••••••" class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <button onclick="handleRegister()" id="regBtn" 
                     class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-all text-xs mt-1">
@@ -157,12 +174,12 @@
 
             <!-- VIEW 2: DASHBOARD USER (Pegawai) -->
             <div id="dashboardView" class="hidden space-y-3">
-                <div class="p-3 bg-gray-50 rounded-xl flex items-center space-x-3 border border-gray-200">
-                    <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-base font-bold shrink-0" id="userInitial">U</div>
+                <div class="p-3 bg-gray-50 dark:bg-slate-800/80 rounded-xl flex items-center space-x-3 border border-gray-200 dark:border-slate-700/60">
+                    <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center text-base font-bold shrink-0" id="userInitial">U</div>
                     <div class="flex-1 min-w-0">
-                        <h2 class="font-bold text-xs sm:text-sm text-gray-900 truncate" id="userName">-</h2>
-                        <p class="text-[11px] text-gray-500 truncate" id="userNik">-</p>
-                        <span class="inline-block px-2 py-0.5 mt-0.5 bg-green-100 text-green-700 text-[10px] font-semibold rounded-full truncate" id="userRoleTag">Pegawai</span>
+                        <h2 class="font-bold text-xs sm:text-sm text-gray-900 dark:text-white truncate" id="userName">-</h2>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate" id="userNik">-</p>
+                        <span class="inline-block px-2 py-0.5 mt-0.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-[10px] font-semibold rounded-full truncate" id="userRoleTag">Pegawai</span>
                     </div>
                     <button onclick="handleLogout()" class="text-gray-400 hover:text-red-500 text-sm p-2 shrink-0" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
@@ -175,48 +192,48 @@
 
                 <!-- PANEL PEMILIHAN STATUS -->
                 <div class="space-y-2.5">
-                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 uppercase">Jenis Presensi</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase">Jenis Presensi</label>
                     
                     <div class="grid grid-cols-3 gap-1.5">
                         <button onclick="selectStatusMode('auto')" id="btnModeAuto" 
-                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-emerald-600 text-white shadow-sm flex flex-col items-center justify-center space-y-1">
+                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-emerald-600 text-white border-emerald-600 shadow-sm flex flex-col items-center justify-center space-y-1">
                             <i class="fa-solid fa-clock"></i>
                             <span id="autoModeLabel" class="truncate w-full text-center">Otomatis</span>
                         </button>
                         <button onclick="selectStatusMode('Dinas Luar')" id="btnModeDinas" 
-                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 text-gray-700 border-gray-200 flex flex-col items-center justify-center space-y-1">
+                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1">
                             <i class="fa-solid fa-briefcase"></i>
                             <span>Dinas Luar</span>
                         </button>
                         <button onclick="selectStatusMode('Izin / Sakit')" id="btnModeIzin" 
-                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 text-gray-700 border-gray-200 flex flex-col items-center justify-center space-y-1">
+                            class="py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1">
                             <i class="fa-solid fa-file-medical"></i>
                             <span>Izin / Sakit</span>
                         </button>
                     </div>
 
                     <!-- Info Status Aktif -->
-                    <div id="activeStatusInfo" class="text-xs bg-blue-50 text-blue-800 p-2.5 rounded-xl border border-blue-100 flex items-center justify-between">
+                    <div id="activeStatusInfo" class="text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 p-2.5 rounded-xl border border-blue-100 dark:border-blue-900/60 flex items-center justify-between">
                         <span class="truncate pr-2">Status: <strong id="selectedStatusText">Hadir (Masuk Kerja)</strong></span>
-                        <span id="timeBadge" class="px-2 py-0.5 bg-blue-200 text-blue-800 rounded text-[10px] font-bold shrink-0">Pagi</span>
+                        <span id="timeBadge" class="px-2 py-0.5 bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded text-[10px] font-bold shrink-0">Pagi</span>
                     </div>
 
                     <!-- Kolom Catatan -->
                     <div id="notesContainer" class="hidden">
-                        <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 uppercase mb-1">Catatan / Keterangan Keperluan</label>
-                        <textarea id="notesInput" rows="2" placeholder="Tuliskan keterangan izin atau detail dinas luar..." class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                        <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Catatan / Keterangan Keperluan</label>
+                        <textarea id="notesInput" rows="2" placeholder="Tuliskan keterangan izin atau detail dinas luar..." class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                     </div>
 
                     <!-- GPS Status & Mini Maps -->
-                    <div id="gpsStatus" class="text-xs text-gray-500 bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                    <div id="gpsStatus" class="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/80 p-3 rounded-xl border border-gray-200 dark:border-slate-700/60 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="flex items-center space-x-1.5 truncate pr-2"><i class="fa-solid fa-crosshairs text-blue-500 shrink-0"></i><span id="gpsText" class="truncate">Memuat Posisi GPS...</span></span>
-                            <span id="gpsBadge" class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold shrink-0">Proses</span>
+                            <span id="gpsBadge" class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-[10px] font-bold shrink-0">Proses</span>
                         </div>
-                        <div id="miniMapContainer" class="w-full h-36 rounded-xl overflow-hidden border border-gray-200 hidden">
+                        <div id="miniMapContainer" class="w-full h-36 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 hidden">
                             <div id="miniMap" class="w-full h-full z-0"></div>
                         </div>
-                        <button onclick="fetchUserLocation()" id="updateGpsBtn" class="w-full py-2 bg-white text-blue-700 font-semibold rounded-xl text-xs transition-all flex items-center justify-center space-x-1.5 border border-blue-200 shadow-sm">
+                        <button onclick="fetchUserLocation()" id="updateGpsBtn" class="w-full py-2 bg-white dark:bg-slate-700 text-blue-700 dark:text-blue-300 font-semibold rounded-xl text-xs transition-all flex items-center justify-center space-x-1.5 border border-blue-200 dark:border-slate-600 shadow-sm">
                             <i class="fa-solid fa-rotate-right"></i>
                             <span>Update Lokasi GPS</span>
                         </button>
@@ -232,37 +249,37 @@
                 <div id="responseAlert" class="hidden p-3 rounded-xl text-xs font-semibold text-center shadow-sm"></div>
 
                 <!-- PANEL REKAP PRIBADI -->
-                <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 space-y-2 mt-2">
+                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2 mt-2">
                     <div class="flex items-center justify-between">
-                        <h4 class="text-[11px] font-bold text-gray-700 uppercase tracking-wider"><i class="fa-solid fa-chart-pie text-blue-600 mr-1.5"></i> Rekap Aktivitas Pribadi</h4>
-                        <button onclick="loadPersonalRecap()" class="text-[11px] text-blue-600 hover:underline"><i class="fa-solid fa-rotate-right mr-1"></i> Muat Ulang</button>
+                        <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><i class="fa-solid fa-chart-pie text-blue-600 mr-1.5"></i> Rekap Aktivitas Pribadi</h4>
+                        <button onclick="loadPersonalRecap()" class="text-[11px] text-blue-600 dark:text-blue-400 hover:underline"><i class="fa-solid fa-rotate-right mr-1"></i> Muat Ulang</button>
                     </div>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <div class="bg-amber-50 p-1.5 rounded-lg border border-amber-100">
-                            <p class="text-[9px] text-amber-700 font-semibold uppercase">Terlambat</p>
-                            <h5 class="text-xs font-bold text-amber-800 mt-0.5" id="recapLate">0 mnt</h5>
+                        <div class="bg-amber-50 dark:bg-amber-950/40 p-1.5 rounded-lg border border-amber-100 dark:border-amber-900/60">
+                            <p class="text-[9px] text-amber-700 dark:text-amber-400 font-semibold uppercase">Terlambat</p>
+                            <h5 class="text-xs font-bold text-amber-800 dark:text-amber-300 mt-0.5" id="recapLate">0 mnt</h5>
                         </div>
-                        <div class="bg-orange-50 p-1.5 rounded-lg border border-orange-100">
-                            <p class="text-[9px] text-orange-700 font-semibold uppercase">Pulang Cepat</p>
-                            <h5 class="text-xs font-bold text-orange-800 mt-0.5" id="recapEarly">0 mnt</h5>
+                        <div class="bg-orange-50 dark:bg-orange-950/40 p-1.5 rounded-lg border border-orange-100 dark:border-orange-900/60">
+                            <p class="text-[9px] text-orange-700 dark:text-orange-400 font-semibold uppercase">Pulang Cepat</p>
+                            <h5 class="text-xs font-bold text-orange-800 dark:text-orange-300 mt-0.5" id="recapEarly">0 mnt</h5>
                         </div>
-                        <div class="bg-emerald-50 p-1.5 rounded-lg border border-emerald-100">
-                            <p class="text-[9px] text-emerald-700 font-semibold uppercase">Hadir</p>
-                            <h5 class="text-xs font-bold text-emerald-800 mt-0.5" id="recapHadir">0</h5>
+                        <div class="bg-emerald-50 dark:bg-emerald-950/40 p-1.5 rounded-lg border border-emerald-100 dark:border-emerald-900/60">
+                            <p class="text-[9px] text-emerald-700 dark:text-emerald-400 font-semibold uppercase">Hadir</p>
+                            <h5 class="text-xs font-bold text-emerald-800 dark:text-emerald-300 mt-0.5" id="recapHadir">0</h5>
                         </div>
                     </div>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <div class="bg-blue-50 p-1.5 rounded-lg border border-blue-100">
-                            <p class="text-[9px] text-blue-700 font-semibold uppercase">Pulang</p>
-                            <h5 class="text-xs font-bold text-blue-800 mt-0.5" id="recapPulang">0</h5>
+                        <div class="bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-100 dark:border-blue-900/60">
+                            <p class="text-[9px] text-blue-700 dark:text-blue-400 font-semibold uppercase">Pulang</p>
+                            <h5 class="text-xs font-bold text-blue-800 dark:text-blue-300 mt-0.5" id="recapPulang">0</h5>
                         </div>
-                        <div class="bg-purple-50 p-1.5 rounded-lg border border-purple-100">
-                            <p class="text-[9px] text-purple-700 font-semibold uppercase">Dinas Luar</p>
-                            <h5 class="text-xs font-bold text-purple-800 mt-0.5" id="recapDinas">0</h5>
+                        <div class="bg-purple-50 dark:bg-purple-950/40 p-1.5 rounded-lg border border-purple-100 dark:border-purple-900/60">
+                            <p class="text-[9px] text-purple-700 dark:text-purple-400 font-semibold uppercase">Dinas Luar</p>
+                            <h5 class="text-xs font-bold text-purple-800 dark:text-purple-300 mt-0.5" id="recapDinas">0</h5>
                         </div>
-                        <div class="bg-rose-50 p-1.5 rounded-lg border border-rose-100">
-                            <p class="text-[9px] text-rose-700 font-semibold uppercase">Izin / Sakit</p>
-                            <h5 class="text-xs font-bold text-rose-800 mt-0.5" id="recapIzin">0</h5>
+                        <div class="bg-rose-50 dark:bg-rose-950/40 p-1.5 rounded-lg border border-rose-100 dark:border-rose-900/60">
+                            <p class="text-[9px] text-rose-700 dark:text-rose-400 font-semibold uppercase">Izin / Sakit</p>
+                            <h5 class="text-xs font-bold text-rose-800 dark:text-rose-300 mt-0.5" id="recapIzin">0</h5>
                         </div>
                     </div>
                 </div>
@@ -270,32 +287,32 @@
 
             <!-- VIEW 3: DASHBOARD ADMIN -->
             <div id="adminDashboardView" class="hidden space-y-3">
-                <div class="p-3.5 rounded-xl flex items-center space-x-3 shadow-sm bg-indigo-50 border border-indigo-100">
+                <div class="p-3.5 rounded-xl flex items-center space-x-3 shadow-sm bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900/60">
                     <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center text-base font-bold shrink-0"><i class="fa-solid fa-user-shield"></i></div>
                     <div class="flex-1 min-w-0">
-                        <h2 class="font-bold text-xs sm:text-sm text-gray-900 truncate" id="adminName">-</h2>
-                        <span class="inline-block px-2 py-0.5 mt-0.5 bg-indigo-200 text-indigo-800 text-[10px] font-semibold rounded-full">Administrator GPS</span>
+                        <h2 class="font-bold text-xs sm:text-sm text-gray-900 dark:text-white truncate" id="adminName">-</h2>
+                        <span class="inline-block px-2 py-0.5 mt-0.5 bg-indigo-200 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-[10px] font-semibold rounded-full">Administrator GPS</span>
                     </div>
                     <button onclick="handleLogout()" class="text-gray-400 hover:text-red-500 text-sm p-2 shrink-0" title="Keluar"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 text-center">
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
+                    <div class="bg-white dark:bg-slate-800/80 p-3 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60">
                         <p class="text-[10px] text-gray-400 uppercase font-semibold">Total Pegawai</p>
-                        <h3 class="text-lg font-bold text-blue-600 mt-0.5" id="statPegawai">0</h3>
+                        <h3 class="text-lg font-bold text-blue-600 dark:text-blue-400 mt-0.5" id="statPegawai">0</h3>
                     </div>
-                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200">
+                    <div class="bg-white dark:bg-slate-800/80 p-3 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60">
                         <p class="text-[10px] text-gray-400 uppercase font-semibold">Masuk Hari Ini</p>
-                        <h3 class="text-lg font-bold text-emerald-600 mt-0.5" id="statPresensi">0</h3>
+                        <h3 class="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5" id="statPresensi">0</h3>
                     </div>
                 </div>
 
-                <div class="bg-white p-3.5 rounded-xl shadow-sm border border-gray-200 space-y-2.5">
-                    <h4 class="text-[11px] font-bold text-gray-700 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-indigo-600 mr-1"></i> Rekapitulasi Bulanan</h4>
+                <div class="bg-white dark:bg-slate-800/80 p-3.5 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2.5">
+                    <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-indigo-600 mr-1"></i> Rekapitulasi Bulanan</h4>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[10px] font-semibold text-gray-500 mb-1">Pilih Bulan</label>
-                            <select id="rekapBulan" class="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Pilih Bulan</label>
+                            <select id="rekapBulan" class="w-full px-2 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <option value="1">Januari</option>
                                 <option value="2">Februari</option>
                                 <option value="3">Maret</option>
@@ -311,8 +328,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-gray-500 mb-1">Tahun</label>
-                            <select id="rekapTahun" class="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Tahun</label>
+                            <select id="rekapTahun" class="w-full px-2 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <option value="2026">2026</option>
                                 <option value="2027">2027</option>
                                 <option value="2025">2025</option>
@@ -325,9 +342,9 @@
                     <div id="rekapAlert" class="hidden p-2 rounded-xl text-xs font-medium text-center"></div>
                 </div>
 
-                <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-200 space-y-2">
-                    <h4 class="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Akses Spreadsheet Utama</h4>
-                    <a href="#" id="sheetLink" target="_blank" class="block w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold rounded-xl text-center text-xs transition-all">
+                <div class="bg-white dark:bg-slate-800/80 p-3 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2">
+                    <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Akses Spreadsheet Utama</h4>
+                    <a href="#" id="sheetLink" target="_blank" class="block w-full py-2.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-semibold rounded-xl text-center text-xs transition-all">
                         <i class="fa-solid fa-table mr-1"></i> Buka Google Spreadsheet
                     </a>
                 </div>
@@ -335,19 +352,82 @@
         </div>
 
         <!-- Footer -->
-        <div class="mt-4 text-center border-t border-gray-100 pt-3 pb-2">
-            <p class="text-[10px] text-gray-400">© 2026 UPT Puskesmas Kokap II</p>
+        <div class="mt-4 text-center border-t border-gray-100 dark:border-slate-800 pt-3 pb-2">
+            <p class="text-[10px] text-gray-400 dark:text-gray-500">© 2026 UPT Puskesmas Kokap II</p>
         </div>
     </div>
 
     <script>
+        // =======================================================================
+        // MANAJEMEN TEMA (DARK / LIGHT / SYSTEM AUTO)
+        // =======================================================================
+        const systemDarkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('puskesmas_theme_mode') || 'system';
+            applyTheme(savedTheme, false);
+        }
+
+        function setTheme(mode) {
+            localStorage.setItem('puskesmas_theme_mode', mode);
+            applyTheme(mode, true);
+        }
+
+        function applyTheme(mode, animate = true) {
+            const htmlEl = document.documentElement;
+            const metaThemeColor = document.getElementById('metaThemeColor');
+            
+            let btnLight = document.getElementById('themeLightBtn');
+            let btnSystem = document.getElementById('themeSystemBtn');
+            let btnDark = document.getElementById('themeDarkBtn');
+
+            // Reset tombol styling
+            [btnLight, btnSystem, btnDark].forEach(btn => {
+                if(btn) {
+                    btn.className = "px-2 py-1 rounded-lg text-gray-500 dark:text-gray-400 hover:text-blue-600 transition-all text-xs";
+                }
+            });
+
+            let isDarkActive = false;
+
+            if (mode === 'dark') {
+                isDarkActive = true;
+                if(btnDark) btnDark.className = "px-2 py-1 rounded-lg font-bold bg-white dark:bg-slate-700 text-blue-500 shadow-sm transition-all text-xs";
+            } else if (mode === 'light') {
+                isDarkActive = false;
+                if(btnLight) btnLight.className = "px-2.5 py-1 rounded-lg font-bold bg-white text-blue-600 shadow-sm transition-all text-xs";
+            } else {
+                // Mode System
+                isDarkActive = systemDarkModeMediaQuery.matches;
+                if(btnSystem) btnSystem.className = "px-2.5 py-1 rounded-lg font-bold bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 shadow-sm transition-all text-xs";
+            }
+
+            if (isDarkActive) {
+                htmlEl.classList.add('dark');
+                if(metaThemeColor) metaThemeColor.setAttribute('content', '#0f172a');
+            } else {
+                htmlEl.classList.remove('dark');
+                if(metaThemeColor) metaThemeColor.setAttribute('content', '#ffffff');
+            }
+        }
+
+        // Listener jika sistem perangkat berubah tema secara real-time saat mode "system" aktif
+        systemDarkModeMediaQuery.addEventListener('change', () => {
+            const currentSetting = localStorage.getItem('puskesmas_theme_mode') || 'system';
+            if (currentSetting === 'system') {
+                applyTheme('system', false);
+            }
+        });
+
+        // Jalankan inisialisasi tema saat awal muat halaman
+        initTheme();
+
         // =======================================================================
         // KONFIGURASI API UTAMA (SUDAH DIHUBUNGKAN DENGAN GOOGLE APPS SCRIPT ANDA)
         // =======================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbwf_IDTcO84Yp2RPXPEEnWRMaTdtr1QeJeIeUiR_TruoxQbPzFh4O8u4gjZTXYSEf-wog/exec"; 
 
         async function apiCall(action, params = {}) {
-            // Skenario A: Dijalankan langsung di Google Apps Script
             if (typeof google !== 'undefined' && google.script && google.script.run) {
                 return new Promise((resolve, reject) => {
                     google.script.run
@@ -356,7 +436,6 @@
                         .handleApiAction(action, params);
                 });
             } else {
-                // Skenario B: Dijalankan dari GitHub Pages via POST Request
                 params.action = action;
                 try {
                     const response = await fetch(API_URL, {
@@ -382,7 +461,6 @@
 
         document.getElementById('rekapBulan').value = new Date().getMonth() + 1;
 
-        // Auto Logout saat Tab/Browser Ditutup (sessionStorage)
         window.addEventListener('DOMContentLoaded', () => {
             let savedUser = sessionStorage.getItem('puskesmas_user_session');
             if (savedUser) {
@@ -401,7 +479,6 @@
             }
         });
 
-        // Jam Real-time
         setInterval(() => {
             const now = new Date();
             document.getElementById('currentTime').innerText = now.toLocaleTimeString('id-ID');
@@ -467,7 +544,7 @@
             if (!navigator.geolocation) {
                 gpsText.innerText = "Browser tidak mendukung GPS.";
                 gpsBadge.innerText = "Error";
-                gpsBadge.className = "px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-bold";
+                gpsBadge.className = "px-2 py-0.5 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded text-[10px] font-bold";
                 return;
             }
 
@@ -475,7 +552,7 @@
             updateBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memperbarui Lokasi...';
             gpsText.innerText = "Mendeteksi posisi perangkat...";
             gpsBadge.innerText = "GPS...";
-            gpsBadge.className = "px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-[10px] font-bold";
+            gpsBadge.className = "px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-[10px] font-bold";
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -483,7 +560,7 @@
                     latestLng = position.coords.longitude;
                     gpsText.innerText = `Lat: ${latestLat.toFixed(5)}, Lng: ${latestLng.toFixed(5)}`;
                     gpsBadge.innerText = "Aktif";
-                    gpsBadge.className = "px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold";
+                    gpsBadge.className = "px-2 py-0.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded text-[10px] font-bold";
                     initMiniMap(latestLat, latestLng);
 
                     updateBtn.disabled = false;
@@ -494,7 +571,7 @@
                     updateBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i><span>Update Lokasi GPS</span>';
                     gpsText.innerText = "Gagal mendeteksi lokasi GPS";
                     gpsBadge.innerText = "Error";
-                    gpsBadge.className = "px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-bold";
+                    gpsBadge.className = "px-2 py-0.5 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded text-[10px] font-bold";
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
@@ -509,20 +586,21 @@
             let notesContainer = document.getElementById('notesContainer');
             let gpsStatusContainer = document.getElementById('gpsStatus');
 
-            btnAuto.className = btnDinas.className = btnIzin.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 text-gray-700 border-gray-200 flex flex-col items-center justify-center space-y-1";
+            let defaultClass = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1";
+            btnAuto.className = btnDinas.className = btnIzin.className = defaultClass;
 
             if (mode === 'auto') {
-                btnAuto.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-emerald-600 text-white shadow-sm flex flex-col items-center justify-center space-y-1";
+                btnAuto.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-emerald-600 text-white border-emerald-600 shadow-sm flex flex-col items-center justify-center space-y-1";
                 statusText.innerText = (computedAutoStatus === 'Hadir') ? "Hadir (Masuk Kerja)" : "Pulang Kerja";
                 notesContainer.classList.add('hidden');
                 gpsStatusContainer.classList.remove('hidden');
             } else if (mode === 'Dinas Luar') {
-                btnDinas.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-purple-600 text-white shadow-sm flex flex-col items-center justify-center space-y-1";
+                btnDinas.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-purple-600 text-white border-purple-600 shadow-sm flex flex-col items-center justify-center space-y-1";
                 statusText.innerText = "Dinas Luar";
                 notesContainer.classList.remove('hidden');
                 gpsStatusContainer.classList.add('hidden');
             } else if (mode === 'Izin / Sakit') {
-                btnIzin.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-rose-600 text-white shadow-sm flex flex-col items-center justify-center space-y-1";
+                btnIzin.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-rose-600 text-white border-rose-600 shadow-sm flex flex-col items-center justify-center space-y-1";
                 statusText.innerText = "Izin / Sakit";
                 notesContainer.classList.remove('hidden');
                 gpsStatusContainer.classList.add('hidden');
@@ -539,13 +617,13 @@
             if (tab === 'login') {
                 loginView.classList.remove('hidden');
                 regView.classList.add('hidden');
-                btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white text-blue-600 shadow-sm transition-all";
-                btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 transition-all";
+                btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm transition-all";
+                btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all";
             } else {
                 loginView.classList.add('hidden');
                 regView.classList.remove('hidden');
-                btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white text-indigo-600 shadow-sm transition-all";
-                btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 transition-all";
+                btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all";
+                btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all";
             }
         }
 
@@ -565,14 +643,14 @@
 
             if (!nik || !nama || !jabatan || !noHp || !password || !passwordConfirm) {
                 alertBox.innerText = "Semua kolom wajib diisi!";
-                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
                 return;
             }
 
             if (password !== passwordConfirm) {
                 alertBox.innerText = "Password dan Ketik Ulang Password tidak sama!";
-                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
                 return;
             }
@@ -585,7 +663,7 @@
                 btn.disabled = false;
                 btn.innerText = "Daftar Sekarang";
                 alertBox.innerText = res.message;
-                alertBox.className = res.success ? "p-2 rounded-xl text-xs font-medium text-center bg-green-100 text-green-700" : "p-2 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = res.success ? "p-2 rounded-xl text-xs font-medium text-center bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300" : "p-2 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
                 if (res.success) {
                     document.getElementById('regNik').value = '';
@@ -600,7 +678,7 @@
                 btn.disabled = false;
                 btn.innerText = "Daftar Sekarang";
                 alertBox.innerText = "Gagal memproses pendaftaran.";
-                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = "p-2 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
             }
         }
@@ -712,13 +790,13 @@
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-file-excel mr-1"></i> Buat Sheet Rekap';
                 alertBox.innerText = res.message;
-                alertBox.className = res.success ? "p-2.5 rounded-xl text-xs font-medium text-center bg-green-100 text-green-700" : "p-2.5 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = res.success ? "p-2.5 rounded-xl text-xs font-medium text-center bg-green-100 dark:bg-green-950/60 text-green-700 dark:text-green-300" : "p-2.5 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
             } catch(e) {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-file-excel mr-1"></i> Buat Sheet Rekap';
                 alertBox.innerText = "Gagal membuat rekap bulanan.";
-                alertBox.className = "p-2.5 rounded-xl text-xs font-medium text-center bg-red-100 text-red-700";
+                alertBox.className = "p-2.5 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
             }
         }
@@ -761,13 +839,13 @@
 
                 if (!res.success) {
                     alertBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1.5 text-base"></i><strong>Peringatan Ketentuan:</strong> ' + res.message;
-                    alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-red-100 text-red-800 border border-red-300 shadow-sm";
+                    alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-300 dark:border-red-900/60 shadow-sm";
                 } else if (res.success && res.isLate) {
                     alertBox.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-1.5 text-base"></i>' + res.message;
-                    alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-amber-100 text-amber-800 border border-amber-300 shadow-sm";
+                    alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-900/60 shadow-sm";
                 } else {
                     alertBox.innerHTML = '<i class="fa-solid fa-circle-check mr-1.5 text-base"></i>' + res.message;
-                    alertBox.className = "p-3 rounded-xl text-xs font-semibold text-center bg-green-100 text-green-800 border border-green-300 shadow-sm";
+                    alertBox.className = "p-3 rounded-xl text-xs font-semibold text-center bg-green-100 dark:bg-green-950/60 text-green-800 dark:text-green-300 border border-green-300 dark:border-green-900/60 shadow-sm";
                 }
                 
                 alertBox.classList.remove('hidden');
@@ -782,8 +860,8 @@
                 updateSubmitButtonText();
                 
                 alertBox.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i><strong>Error:</strong> Gagal terhubung ke server.';
-                alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-red-100 text-red-800 border border-red-300 shadow-sm";
-                alertBox.classList.remove('hidden');
+                alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-300 dark:border-red-900/60 shadow-sm";
+                alertBox.classList.set('hidden');
             }
         }
     </script>
