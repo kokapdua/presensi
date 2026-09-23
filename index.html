@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <!-- Header Logo & Judul (Pakai Gambar Logo) -->
+            <!-- Header Logo & Judul -->
             <div class="text-center mb-4 pt-1 sm:pt-0">
                 <div class="w-16 h-16 mx-auto mb-2 flex items-center justify-center">
                     <img src="https://lh3.googleusercontent.com/d/1jQjXzfrhmROh-9N8-xvE686iq7NliAFs" alt="Logo Puskesmas Kokap II" class="w-full h-full object-contain">
@@ -307,6 +307,79 @@
                     </div>
                 </div>
 
+                <!-- MENU BARU: REKAP DETAIL PER PEGAWAI PER BULAN KHUSUS ADMIN -->
+                <div class="bg-white dark:bg-slate-800/80 p-3.5 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2.5">
+                    <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><i class="fa-solid fa-user-clock text-blue-600 mr-1"></i> Rekap Detail Pegawai per Bulan</h4>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Pilih Pegawai</label>
+                        <select id="adminSelectPegawai" class="w-full px-2 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">-- Memuat Daftar Pegawai --</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Bulan</label>
+                            <select id="adminRecapBulan" class="w-full px-2 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">Agustus</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-1">Tahun</label>
+                            <select id="adminRecapTahun" class="w-full px-2 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="loadAdminDetailedRecap()" id="adminDetailBtn" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all shadow-sm">
+                        <i class="fa-solid fa-search mr-1"></i> Tampilkan Rekap Pegawai
+                    </button>
+
+                    <!-- Hasil Rekap Detail Pegawai -->
+                    <div id="adminDetailResultContainer" class="hidden space-y-2 pt-2 border-t border-gray-100 dark:border-slate-700">
+                        <div class="grid grid-cols-2 gap-1.5 text-center">
+                            <div class="bg-amber-50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-100 dark:border-amber-900/60">
+                                <p class="text-[9px] text-amber-700 dark:text-amber-400 font-semibold uppercase">Keterlambatan</p>
+                                <h5 class="text-xs font-bold text-amber-800 dark:text-amber-300 mt-0.5" id="admRecapLate">0 mnt</h5>
+                            </div>
+                            <div class="bg-orange-50 dark:bg-orange-950/40 p-2 rounded-lg border border-orange-100 dark:border-orange-900/60">
+                                <p class="text-[9px] text-orange-700 dark:text-orange-400 font-semibold uppercase">Pulang Cepat</p>
+                                <h5 class="text-xs font-bold text-orange-800 dark:text-orange-300 mt-0.5" id="admRecapEarly">0 mnt</h5>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1 text-center">
+                            <div class="bg-emerald-50 dark:bg-emerald-950/40 p-1.5 rounded-lg border border-emerald-100 dark:border-emerald-900/60">
+                                <p class="text-[8px] text-emerald-700 dark:text-emerald-400 font-semibold uppercase">Hadir</p>
+                                <h5 class="text-xs font-bold text-emerald-800 dark:text-emerald-300 mt-0.5" id="admRecapHadir">0</h5>
+                            </div>
+                            <div class="bg-blue-50 dark:bg-blue-950/40 p-1.5 rounded-lg border border-blue-100 dark:border-blue-900/60">
+                                <p class="text-[8px] text-blue-700 dark:text-blue-400 font-semibold uppercase">Pulang</p>
+                                <h5 class="text-xs font-bold text-blue-800 dark:text-blue-300 mt-0.5" id="admRecapPulang">0</h5>
+                            </div>
+                            <div class="bg-purple-50 dark:bg-purple-950/40 p-1.5 rounded-lg border border-purple-100 dark:border-purple-900/60">
+                                <p class="text-[8px] text-purple-700 dark:text-purple-400 font-semibold uppercase">Dinas</p>
+                                <h5 class="text-xs font-bold text-purple-800 dark:text-purple-300 mt-0.5" id="admRecapDinas">0</h5>
+                            </div>
+                            <div class="bg-rose-50 dark:bg-rose-950/40 p-1.5 rounded-lg border border-rose-100 dark:border-rose-900/60">
+                                <p class="text-[8px] text-rose-700 dark:text-rose-400 font-semibold uppercase">Izin</p>
+                                <h5 class="text-xs font-bold text-rose-800 dark:text-rose-300 mt-0.5" id="admRecapIzin">0</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-white dark:bg-slate-800/80 p-3.5 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2.5">
                     <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider"><i class="fa-solid fa-calendar-days text-indigo-600 mr-1"></i> Rekapitulasi Bulanan</h4>
                     <div class="grid grid-cols-2 gap-2">
@@ -381,7 +454,6 @@
             let btnSystem = document.getElementById('themeSystemBtn');
             let btnDark = document.getElementById('themeDarkBtn');
 
-            // Reset tombol styling
             [btnLight, btnSystem, btnDark].forEach(btn => {
                 if(btn) {
                     btn.className = "px-2 py-1 rounded-lg text-gray-500 dark:text-gray-400 hover:text-blue-600 transition-all text-xs";
@@ -397,7 +469,6 @@
                 isDarkActive = false;
                 if(btnLight) btnLight.className = "px-2.5 py-1 rounded-lg font-bold bg-white text-blue-600 shadow-sm transition-all text-xs";
             } else {
-                // Mode System
                 isDarkActive = systemDarkModeMediaQuery.matches;
                 if(btnSystem) btnSystem.className = "px-2.5 py-1 rounded-lg font-bold bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 shadow-sm transition-all text-xs";
             }
@@ -411,7 +482,6 @@
             }
         }
 
-        // Listener jika sistem perangkat berubah tema secara real-time saat mode "system" aktif
         systemDarkModeMediaQuery.addEventListener('change', () => {
             const currentSetting = localStorage.getItem('puskesmas_theme_mode') || 'system';
             if (currentSetting === 'system') {
@@ -419,11 +489,10 @@
             }
         });
 
-        // Jalankan inisialisasi tema saat awal muat halaman
         initTheme();
 
         // =======================================================================
-        // KONFIGURASI API UTAMA (SUDAH DIHUBUNGKAN DENGAN GOOGLE APPS SCRIPT ANDA)
+        // KONFIGURASI API UTAMA
         // =======================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbwf_IDTcO84Yp2RPXPEEnWRMaTdtr1QeJeIeUiR_TruoxQbPzFh4O8u4gjZTXYSEf-wog/exec"; 
 
@@ -460,6 +529,7 @@
         let currentUser = null;
 
         document.getElementById('rekapBulan').value = new Date().getMonth() + 1;
+        document.getElementById('adminRecapBulan').value = new Date().getMonth() + 1;
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedUser = sessionStorage.getItem('puskesmas_user_session');
@@ -732,7 +802,7 @@
             }
         }
 
-        function applyLoginState(result) {
+        async function applyLoginState(result) {
             document.getElementById('authTabs').classList.add('hidden');
             document.getElementById('loginView').classList.add('hidden');
 
@@ -742,6 +812,7 @@
                 document.getElementById('statPegawai').innerText = result ? result.totalPegawai : sessionStorage.getItem('puskesmas_total_pegawai');
                 document.getElementById('statPresensi').innerText = result ? result.totalMasukHariIni : sessionStorage.getItem('puskesmas_total_masuk');
                 document.getElementById('adminDashboardView').classList.remove('hidden');
+                loadListPegawaiForAdmin();
             } else {
                 document.getElementById('userName').innerText = currentUser.nama;
                 document.getElementById('userNik').innerText = "NIP/NIK: " + currentUser.nik;
@@ -767,6 +838,60 @@
                     document.getElementById('recapIzin').innerText = res.data.izin;
                 }
             } catch(e) {}
+        }
+
+        async function loadListPegawaiForAdmin() {
+            try {
+                const res = await apiCall('getListPegawai');
+                if (res.success) {
+                    let select = document.getElementById('adminSelectPegawai');
+                    select.innerHTML = '<option value="">-- Pilih Nama Pegawai --</option>';
+                    res.data.forEach(p => {
+                        let opt = document.createElement('option');
+                        opt.value = p.nik;
+                        opt.innerText = p.nama + " (" + p.jabatan + ")";
+                        select.appendChild(opt);
+                    });
+                }
+            } catch(e) {}
+        }
+
+        async function loadAdminDetailedRecap() {
+            let nik = document.getElementById('adminSelectPegawai').value;
+            let bulan = document.getElementById('adminRecapBulan').value;
+            let tahun = document.getElementById('adminRecapTahun').value;
+            let btn = document.getElementById('adminDetailBtn');
+            let container = document.getElementById('adminDetailResultContainer');
+
+            if (!nik) {
+                alert("Silakan pilih pegawai terlebih dahulu.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memuat...';
+
+            try {
+                const res = await apiCall('getAdminDetailedRecap', { nik, bulan, tahun });
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-search mr-1"></i> Tampilkan Rekap Pegawai';
+
+                if (res.success) {
+                    document.getElementById('admRecapLate').innerText = res.data.terlambatMenit + " mnt";
+                    document.getElementById('admRecapEarly').innerText = res.data.pulangCepatMenit + " mnt";
+                    document.getElementById('admRecapHadir').innerText = res.data.hadir;
+                    document.getElementById('admRecapPulang').innerText = res.data.pulang;
+                    document.getElementById('admRecapDinas').innerText = res.data.dinasLuar;
+                    document.getElementById('admRecapIzin').innerText = res.data.izin;
+                    container.classList.remove('hidden');
+                } else {
+                    alert(res.message || "Gagal memuat rekap.");
+                }
+            } catch(e) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-search mr-1"></i> Tampilkan Rekap Pegawai';
+                alert("Terjadi kesalahan koneksi.");
+            }
         }
 
         function handleLogout() {
@@ -796,7 +921,7 @@
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-file-excel mr-1"></i> Buat Sheet Rekap';
                 alertBox.innerText = "Gagal membuat rekap bulanan.";
-                alertBox.className = "p-2.5 rounded-xl text-xs font-medium text-center bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
+                alertBox.className = "p-2.5 rounded-xl text-xs font-medium text-center bg-green-100 dark:bg-red-950/60 text-red-700 dark:text-red-300";
                 alertBox.classList.remove('hidden');
             }
         }
@@ -861,7 +986,7 @@
                 
                 alertBox.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1.5 text-base"></i><strong>Error:</strong> Gagal terhubung ke server.';
                 alertBox.className = "p-3.5 rounded-xl text-xs font-semibold text-center bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300 border border-red-300 dark:border-red-900/60 shadow-sm";
-                alertBox.classList.set('hidden');
+                alertBox.classList.remove('hidden');
             }
         }
     </script>
