@@ -246,7 +246,7 @@
                 <div class="bg-white dark:bg-slate-800/80 p-3 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700/60 space-y-2 mt-2">
                     <div class="flex items-center justify-between">
                         <h4 class="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                            <i class="fa-solid fa-chart-pie text-blue-600 mr-1.5"></i> Rekap Aktivitas (<span id="rekapPeriodLabel">-</span>)
+                            <i class="fa-solid fa-chart-pie text-blue-600 mr-1.5"></i> Rekap Aktivitas Pribadi (<span id="rekapPeriodLabel">-</span>)
                         </h4>
                         <button onclick="loadPersonalRecap()" class="text-[11px] text-blue-600 dark:text-blue-400 hover:underline"><i class="fa-solid fa-rotate-right mr-1"></i> Muat Ulang</button>
                     </div>
@@ -556,7 +556,6 @@
         document.getElementById('adminRecapBulan').value = new Date().getMonth() + 1;
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Set label bulan & tahun untuk rekap aktivitas pribadi saat dimuat
             const namaBulanArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             const nowInit = new Date();
             const periodLabel = document.getElementById('rekapPeriodLabel');
@@ -594,27 +593,66 @@
             const totalMins = hours * 60 + minutes;
             const dayOfWeek = now.getDay(); 
 
-            let thresholdPulangMins = 12 * 60; 
-            
+            let batasPulangMins = 14 * 60 + 30; // Senin - Kamis: 14:30
             if (dayOfWeek === 5) {
-                thresholdPulangMins = 11 * 60 + 30; 
+                batasPulangMins = 11 * 60 + 30; // Jumat: 11:30
             } else if (dayOfWeek === 6) {
-                thresholdPulangMins = 13 * 60; 
+                batasPulangMins = 13 * 60; // Sabtu: 13:00
             }
 
-            if (totalMins < thresholdPulangMins) {
+            const batasAkhirPulangMins = 18 * 60; // 18:00
+            const batasMaksimalMasukMins = 9 * 60; // 09:00
+
+            const submitBtn = document.getElementById('submitBtn');
+            const timeBadge = document.getElementById('timeBadge');
+            const autoModeLabel = document.getElementById('autoModeLabel');
+            const selectedStatusText = document.getElementById('selectedStatusText');
+
+            let thresholdSwitchMins = 12 * 60;
+            if (dayOfWeek === 5) thresholdSwitchMins = 11 * 60 + 30;
+            if (dayOfWeek === 6) thresholdSwitchMins = 13 * 60;
+
+            if (totalMins < thresholdSwitchMins) {
                 computedAutoStatus = 'Hadir';
-                document.getElementById('autoModeLabel').innerText = "Otomatis (Masuk)";
-                document.getElementById('timeBadge').innerText = "Pagi";
+                if(autoModeLabel) autoModeLabel.innerText = "Otomatis (Masuk)";
+                if(timeBadge) timeBadge.innerText = "Pagi";
             } else {
                 computedAutoStatus = 'Pulang';
-                document.getElementById('autoModeLabel').innerText = "Otomatis (Pulang)";
-                document.getElementById('timeBadge').innerText = "Siang/Sore";
+                if(autoModeLabel) autoModeLabel.innerText = "Otomatis (Pulang)";
+                if(timeBadge) timeBadge.innerText = "Siang/Sore";
             }
 
             if (currentSelectedStatus === 'auto') {
-                document.getElementById('selectedStatusText').innerText = (computedAutoStatus === 'Hadir') ? "Hadir (Masuk Kerja)" : "Pulang Kerja";
-                updateSubmitButtonText();
+                if(selectedStatusText) selectedStatusText.innerText = (computedAutoStatus === 'Hadir') ? "Hadir (Masuk Kerja)" : "Pulang Kerja";
+                
+                if (computedAutoStatus === 'Hadir' && totalMins > batasMaksimalMasukMins) {
+                    if(submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.className = "w-full py-3.5 bg-gray-400 dark:bg-slate-700 text-gray-200 font-bold rounded-xl shadow-none cursor-not-allowed text-sm flex items-center justify-center space-x-2";
+                        submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>Waktu Presensi Masuk Ditutup (>09:00)</span>';
+                    }
+                } 
+                else if (computedAutoStatus === 'Pulang' && totalMins < batasPulangMins) {
+                    if(submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.className = "w-full py-3.5 bg-gray-400 dark:bg-slate-700 text-gray-200 font-bold rounded-xl shadow-none cursor-not-allowed text-sm flex items-center justify-center space-x-2";
+                        submitBtn.innerHTML = '<i class="fa-solid fa-clock"></i><span>Belum Waktunya Pulang</span>';
+                    }
+                } 
+                else if (computedAutoStatus === 'Pulang' && totalMins > batasAkhirPulangMins) {
+                    if(submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.className = "w-full py-3.5 bg-gray-400 dark:bg-slate-700 text-gray-200 font-bold rounded-xl shadow-none cursor-not-allowed text-sm flex items-center justify-center space-x-2";
+                        submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>Waktu Presensi Pulang Ditutup</span>';
+                    }
+                } 
+                else {
+                    if(submitBtn && submitBtn.disabled && currentSelectedStatus === 'auto') {
+                        submitBtn.disabled = false;
+                        submitBtn.className = "w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm flex items-center justify-center space-x-2";
+                    }
+                    updateSubmitButtonText();
+                }
             }
         }
 
@@ -670,7 +708,6 @@
                     latestLat = position.coords.latitude;
                     latestLng = position.coords.longitude;
                     
-                    // Hitung jarak langsung dari titik Puskesmas
                     let distanceMeters = calculateDistanceClient(KOORDINAT_PUSKESMAS_CLIENT.lat, KOORDINAT_PUSKESMAS_CLIENT.lng, latestLat, latestLng);
                     
                     gpsText.innerText = `Lat: ${latestLat.toFixed(5)}, Lng: ${latestLng.toFixed(5)} (Jarak: ${distanceMeters}m)`;
@@ -712,15 +749,23 @@
             let statusText = document.getElementById('selectedStatusText');
             let notesContainer = document.getElementById('notesContainer');
             let gpsStatusContainer = document.getElementById('gpsStatus');
+            let submitBtn = document.getElementById('submitBtn');
 
             let defaultClass = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1";
             btnAuto.className = btnDinas.className = btnIzin.className = defaultClass;
+
+            // Pastikan tombol aktif kembali saat pindah ke mode manual (Dinas/Izin)
+            if(submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.className = "w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm flex items-center justify-center space-x-2";
+            }
 
             if (mode === 'auto') {
                 btnAuto.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-emerald-600 text-white border-emerald-600 shadow-sm flex flex-col items-center justify-center space-y-1";
                 statusText.innerText = (computedAutoStatus === 'Hadir') ? "Hadir (Masuk Kerja)" : "Pulang Kerja";
                 notesContainer.classList.add('hidden');
                 gpsStatusContainer.classList.remove('hidden');
+                updateAutomaticStatusTime(new Date());
             } else if (mode === 'Dinas Luar') {
                 btnDinas.className = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-purple-600 text-white border-purple-600 shadow-sm flex flex-col items-center justify-center space-y-1";
                 statusText.innerText = "Dinas Luar";
