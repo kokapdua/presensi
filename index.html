@@ -593,13 +593,16 @@
             const totalMins = hours * 60 + minutes;
             const dayOfWeek = now.getDay(); 
 
-            let batasPulangMins = 13 * 60 + 30; // Senin - Kamis: dimajukan ke 13:30
-if (dayOfWeek === 5) {
-    batasPulangMins = 10 * 60 + 30; // Jumat: dimajukan ke 10:30
-} else if (dayOfWeek === 6) {
-    batasPulangMins = 12 * 60; // Sabtu: dimajukan ke 12:00
-}
+            // Atur waktu normal pulang
+            let standardPulangMins = 14 * 60 + 30; // Senin - Kamis: 14:30
+            if (dayOfWeek === 5) {
+                standardPulangMins = 11 * 60 + 30; // Jumat: 11:30
+            } else if (dayOfWeek === 6) {
+                standardPulangMins = 13 * 60; // Sabtu: 13:00
+            }
 
+            // Tombol dibuka 1 jam sebelum waktu pulang normal
+            let batasMulaiPulangMins = standardPulangMins - 60; 
             const batasAkhirPulangMins = 18 * 60; // 18:00
             const batasMaksimalMasukMins = 9 * 60; // 09:00
 
@@ -608,9 +611,8 @@ if (dayOfWeek === 5) {
             const autoModeLabel = document.getElementById('autoModeLabel');
             const selectedStatusText = document.getElementById('selectedStatusText');
 
-            let thresholdSwitchMins = 12 * 60;
-            if (dayOfWeek === 5) thresholdSwitchMins = 11 * 60 + 30;
-            if (dayOfWeek === 6) thresholdSwitchMins = 13 * 60;
+            // Switch tampilan ke "Pulang" saat waktu buka pulang tercapai
+            let thresholdSwitchMins = batasMulaiPulangMins; 
 
             if (totalMins < thresholdSwitchMins) {
                 computedAutoStatus = 'Hadir';
@@ -632,7 +634,7 @@ if (dayOfWeek === 5) {
                         submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>Waktu Presensi Masuk Ditutup (>09:00)</span>';
                     }
                 } 
-                else if (computedAutoStatus === 'Pulang' && totalMins < batasPulangMins) {
+                else if (computedAutoStatus === 'Pulang' && totalMins < batasMulaiPulangMins) {
                     if(submitBtn) {
                         submitBtn.disabled = true;
                         submitBtn.className = "w-full py-3.5 bg-gray-400 dark:bg-slate-700 text-gray-200 font-bold rounded-xl shadow-none cursor-not-allowed text-sm flex items-center justify-center space-x-2";
