@@ -593,12 +593,12 @@
             const totalMins = hours * 60 + minutes;
             const dayOfWeek = now.getDay(); 
 
-            let batasPulangMins = 14 * 60 + 30; // Senin - Kamis: 14:30
-            if (dayOfWeek === 5) {
-                batasPulangMins = 11 * 60 + 30; // Jumat: 11:30
-            } else if (dayOfWeek === 6) {
-                batasPulangMins = 13 * 60; // Sabtu: 13:00
-            }
+            let batasPulangMins = 13 * 60 + 30; // Senin - Kamis: dimajukan ke 13:30
+if (dayOfWeek === 5) {
+    batasPulangMins = 10 * 60 + 30; // Jumat: dimajukan ke 10:30
+} else if (dayOfWeek === 6) {
+    batasPulangMins = 12 * 60; // Sabtu: dimajukan ke 12:00
+}
 
             const batasAkhirPulangMins = 18 * 60; // 18:00
             const batasMaksimalMasukMins = 9 * 60; // 09:00
