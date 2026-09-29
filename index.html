@@ -59,6 +59,39 @@
             animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
+        @keyframes btnGlowRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-loading-beam {
+            position: relative;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .btn-loading-beam::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: conic-gradient(from 0deg, transparent 0%, transparent 60%, #60a5fa 80%, #ffffff 100%);
+            animation: btnGlowRotate 1.5s linear infinite;
+            z-index: 0;
+            border-radius: 0.85rem;
+        }
+
+        .btn-loading-beam > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-loading-beam span, .btn-loading-beam i {
+            background: #2563eb;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+
         @media (min-width: 640px) {
             body {
                 display: flex;
@@ -518,7 +551,7 @@
 
         initTheme();
 
-        const API_URL = "https://script.google.com/macros/s/AKfycbw0Eh_IzsEFnc8Z98ZEy8vtyrKNBe-jLqP3JZbdksA04VkQtw0JSTdSzrSPc35i_kDEMg/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbw9YfAwOa6nDVYMiesUA0aAsU_ncVIPvyKshBkd3vVM1oAEAuXmB0WspOtTb6ftUVTWkQ/exec"; 
 
         async function apiCall(action, params = {}) {
             if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -593,25 +626,22 @@
             const totalMins = hours * 60 + minutes;
             const dayOfWeek = now.getDay(); 
 
-            // Atur waktu normal pulang
-            let standardPulangMins = 14 * 60 + 30; // Senin - Kamis: 14:30
+            let standardPulangMins = 14 * 60 + 30;
             if (dayOfWeek === 5) {
-                standardPulangMins = 11 * 60 + 30; // Jumat: 11:30
+                standardPulangMins = 11 * 60 + 30;
             } else if (dayOfWeek === 6) {
-                standardPulangMins = 13 * 60; // Sabtu: 13:00
+                standardPulangMins = 13 * 60;
             }
 
-            // Tombol dibuka 1 jam sebelum waktu pulang normal
             let batasMulaiPulangMins = standardPulangMins - 60; 
-            const batasAkhirPulangMins = 18 * 60; // 18:00
-            const batasMaksimalMasukMins = 9 * 60; // 09:00
+            const batasAkhirPulangMins = 18 * 60;
+            const batasMaksimalMasukMins = 9 * 60;
 
             const submitBtn = document.getElementById('submitBtn');
             const timeBadge = document.getElementById('timeBadge');
             const autoModeLabel = document.getElementById('autoModeLabel');
             const selectedStatusText = document.getElementById('selectedStatusText');
 
-            // Switch tampilan ke "Pulang" saat waktu buka pulang tercapai
             let thresholdSwitchMins = batasMulaiPulangMins; 
 
             if (totalMins < thresholdSwitchMins) {
@@ -756,7 +786,6 @@
             let defaultClass = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1";
             btnAuto.className = btnDinas.className = btnIzin.className = defaultClass;
 
-            // Pastikan tombol aktif kembali saat pindah ke mode manual (Dinas/Izin)
             if(submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.className = "w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm flex items-center justify-center space-x-2";
@@ -869,15 +898,24 @@
                 return;
             }
 
-            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memeriksa...';
+            btn.disabled = true;
+            btn.innerHTML = '<span>Memeriksa...</span>';
+            btn.classList.add('btn-loading-beam');
             errDiv.classList.add('hidden');
 
             try {
                 const result = await apiCall('verifyLogin', { nik, password });
+                
+                btn.disabled = false;
                 btn.innerHTML = '<span>Masuk Aplikasi</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+                btn.classList.remove('btn-loading-beam');
+                
                 processLoginResult(result);
             } catch (err) {
+                btn.disabled = false;
                 btn.innerHTML = '<span>Masuk Aplikasi</span><i class="fa-solid fa-arrow-right text-xs"></i>';
+                btn.classList.remove('btn-loading-beam');
+                
                 errDiv.innerText = "Terjadi kesalahan sistem/koneksi.";
                 errDiv.classList.remove('hidden');
             }
