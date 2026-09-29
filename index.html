@@ -59,7 +59,7 @@
             animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* Efek Lampu LED DRL Berputar di Border */
+        /* Efek Lampu LED DRL Berputar di Border Saja */
         @keyframes rotateDrl {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -68,8 +68,8 @@
         .drl-border-wrapper {
             position: relative;
             overflow: hidden;
-            border-radius: 0.75rem;
-            padding: 2px; /* Ketebalan garis lampu LED */
+            border-radius: 1rem;
+            padding: 2px; /* Ketebalan garis lampu LED di tepi */
         }
 
         .drl-border-wrapper::before {
@@ -91,8 +91,12 @@
         .drl-inner-content {
             position: relative;
             z-index: 1;
-            background: inherit;
-            border-radius: calc(0.75rem - 2px);
+            background: #ffffff; /* Warna dasar dalam untuk mode terang */
+            border-radius: calc(1rem - 2px);
+        }
+
+        .dark .drl-inner-content {
+            background: #0f172a; /* Warna dasar dalam untuk mode gelap (slate-900) */
         }
 
         @media (min-width: 640px) {
@@ -145,35 +149,38 @@
                 <button onclick="switchTab('register')" id="tabRegisterBtn" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all">Daftar Akun</button>
             </div>
 
-            <div id="loginView" class="space-y-3">
-                <div>
-                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Nomor NIP / NIK Pegawai</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-id-card"></i></span>
-                        <input type="text" id="nikInput" placeholder="Masukkan NIP atau NIK" onkeydown="handleKeyInput(event)"
-                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
+            <!-- Area Login dengan Bungkus Efek Lampu DRL di Tepian Border -->
+            <div id="loginViewContainer" class="drl-border-wrapper shadow-sm mb-3">
+                <div id="loginView" class="drl-inner-content p-3.5 space-y-3">
+                    <div>
+                        <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Nomor NIP / NIK Pegawai</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-id-card"></i></span>
+                            <input type="text" id="nikInput" placeholder="Masukkan NIP atau NIK" onkeydown="handleKeyInput(event)"
+                                class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Password</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="handleKeyInput(event)"
-                            class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
+                    <div>
+                        <label class="block text-[11px] sm:text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase mb-1">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400"><i class="fa-solid fa-lock"></i></span>
+                            <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="handleKeyInput(event)"
+                                class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 transition-all">
+                        </div>
                     </div>
-                </div>
-                <button onclick="handleLogin()" id="loginBtn" 
-                    class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-sm mt-1">
-                    <span>Masuk Aplikasi</span>
-                    <i class="fa-solid fa-arrow-right text-xs"></i>
-                </button>
-                <div class="text-right pt-1">
-                    <button onclick="resetPasswordWhatsApp()" class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold flex items-center justify-end space-x-1.5 ml-auto">
-                        <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
-                        <span>Lupa Password? Reset via WhatsApp</span>
+                    <button onclick="handleLogin()" id="loginBtn" 
+                        class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-sm mt-1">
+                        <span>Masuk Aplikasi</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
+                    <div class="text-right pt-1">
+                        <button onclick="resetPasswordWhatsApp()" class="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold flex items-center justify-end space-x-1.5 ml-auto">
+                            <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+                            <span>Lupa Password? Reset via WhatsApp</span>
+                        </button>
+                    </div>
+                    <div id="loginError" class="hidden text-center text-xs text-red-500 font-medium mt-1"></div>
                 </div>
-                <div id="loginError" class="hidden text-center text-xs text-red-500 font-medium mt-1"></div>
             </div>
 
             <div id="registerView" class="hidden space-y-2.5">
@@ -257,9 +264,9 @@
                         <textarea id="notesInput" rows="2" placeholder="Tuliskan keterangan izin atau detail dinas luar..." class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                     </div>
 
-                    <!-- Kotak GPS dengan Efek Lampu LED DRL Berputar -->
-                    <div class="drl-border-wrapper shadow-sm">
-                        <div class="drl-inner-content text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/90 p-3 space-y-2">
+                    <!-- Kotak GPS dengan Efek Lampu LED DRL Berputar di Border -->
+                    <div id="gpsStatusContainer" class="drl-border-wrapper shadow-sm">
+                        <div class="drl-inner-content text-xs text-gray-500 dark:text-gray-400 p-3 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="flex items-center space-x-1.5 truncate pr-2"><i class="fa-solid fa-crosshairs text-blue-500 shrink-0"></i><span id="gpsText" class="truncate">Memuat Posisi GPS...</span></span>
                                 <span id="gpsBadge" class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-[10px] font-bold shrink-0">Proses</span>
@@ -786,7 +793,7 @@
             let btnIzin = document.getElementById('btnModeIzin');
             let statusText = document.getElementById('selectedStatusText');
             let notesContainer = document.getElementById('notesContainer');
-            let gpsStatusContainer = document.getElementById('gpsStatus');
+            let gpsStatusContainer = document.getElementById('gpsStatusContainer');
             let submitBtn = document.getElementById('submitBtn');
 
             let defaultClass = "py-2.5 px-1 rounded-xl text-[11px] font-bold border transition-all bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center space-y-1";
@@ -818,18 +825,18 @@
         }
 
         function switchTab(tab) {
-            let loginView = document.getElementById('loginView');
+            let loginContainer = document.getElementById('loginViewContainer');
             let regView = document.getElementById('registerView');
             let btnLogin = document.getElementById('tabLoginBtn');
             let btnReg = document.getElementById('tabRegisterBtn');
 
             if (tab === 'login') {
-                loginView.classList.remove('hidden');
+                loginContainer.classList.remove('hidden');
                 regView.classList.add('hidden');
                 btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm transition-all";
                 btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all";
             } else {
-                loginView.classList.add('hidden');
+                loginContainer.classList.add('hidden');
                 regView.classList.remove('hidden');
                 btnReg.className = "flex-1 py-2 text-xs font-bold rounded-lg bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all";
                 btnLogin.className = "flex-1 py-2 text-xs font-bold rounded-lg text-gray-500 dark:text-gray-400 transition-all";
@@ -943,7 +950,7 @@
 
         async function applyLoginState(result) {
             document.getElementById('authTabs').classList.add('hidden');
-            document.getElementById('loginView').classList.add('hidden');
+            document.getElementById('loginViewContainer').classList.add('hidden');
 
             if (currentUser.role.toLowerCase() === 'admin') {
                 document.getElementById('adminName').innerText = currentUser.nama;
