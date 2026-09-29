@@ -59,37 +59,40 @@
             animation: scaleUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes btnGlowRotate {
+        /* Efek Lampu LED DRL Berputar di Border */
+        @keyframes rotateDrl {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        .btn-loading-beam {
+        .drl-border-wrapper {
             position: relative;
             overflow: hidden;
-            pointer-events: none;
+            border-radius: 0.75rem;
+            padding: 2px; /* Ketebalan garis lampu LED */
         }
 
-        .btn-loading-beam::before {
+        .drl-border-wrapper::before {
             content: '';
             position: absolute;
-            inset: -2px;
-            background: conic-gradient(from 0deg, transparent 0%, transparent 60%, #60a5fa 80%, #ffffff 100%);
-            animation: btnGlowRotate 1.5s linear infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #3b82f6 310deg, #60a5fa 330deg, #ffffff 360deg);
+            animation: rotateDrl 3s linear infinite;
             z-index: 0;
-            border-radius: 0.85rem;
         }
 
-        .btn-loading-beam > * {
+        .dark .drl-border-wrapper::before {
+            background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #3b82f6 310deg, #93c5fd 330deg, #ffffff 360deg);
+        }
+
+        .drl-inner-content {
             position: relative;
             z-index: 1;
-        }
-
-        .btn-loading-beam span, .btn-loading-beam i {
-            background: #2563eb;
-            display: inline-block;
-            width: 100%;
-            height: 100%;
+            background: inherit;
+            border-radius: calc(0.75rem - 2px);
         }
 
         @media (min-width: 640px) {
@@ -254,18 +257,21 @@
                         <textarea id="notesInput" rows="2" placeholder="Tuliskan keterangan izin atau detail dinas luar..." class="w-full px-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
                     </div>
 
-                    <div id="gpsStatus" class="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/80 p-3 rounded-xl border border-gray-200 dark:border-slate-700/60 space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="flex items-center space-x-1.5 truncate pr-2"><i class="fa-solid fa-crosshairs text-blue-500 shrink-0"></i><span id="gpsText" class="truncate">Memuat Posisi GPS...</span></span>
-                            <span id="gpsBadge" class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-[10px] font-bold shrink-0">Proses</span>
+                    <!-- Kotak GPS dengan Efek Lampu LED DRL Berputar -->
+                    <div class="drl-border-wrapper shadow-sm">
+                        <div class="drl-inner-content text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/90 p-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center space-x-1.5 truncate pr-2"><i class="fa-solid fa-crosshairs text-blue-500 shrink-0"></i><span id="gpsText" class="truncate">Memuat Posisi GPS...</span></span>
+                                <span id="gpsBadge" class="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-[10px] font-bold shrink-0">Proses</span>
+                            </div>
+                            <div id="miniMapContainer" class="w-full h-36 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 hidden">
+                                <div id="miniMap" class="w-full h-full z-0"></div>
+                            </div>
+                            <button onclick="fetchUserLocation()" id="updateGpsBtn" class="w-full py-2 bg-white dark:bg-slate-700 text-blue-700 dark:text-blue-300 font-semibold rounded-xl text-xs transition-all flex items-center justify-center space-x-1.5 border border-blue-200 dark:border-slate-600 shadow-sm">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Update Lokasi GPS</span>
+                            </button>
                         </div>
-                        <div id="miniMapContainer" class="w-full h-36 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-700 hidden">
-                            <div id="miniMap" class="w-full h-full z-0"></div>
-                        </div>
-                        <button onclick="fetchUserLocation()" id="updateGpsBtn" class="w-full py-2 bg-white dark:bg-slate-700 text-blue-700 dark:text-blue-300 font-semibold rounded-xl text-xs transition-all flex items-center justify-center space-x-1.5 border border-blue-200 dark:border-slate-600 shadow-sm">
-                            <i class="fa-solid fa-rotate-right"></i>
-                            <span>Update Lokasi GPS</span>
-                        </button>
                     </div>
 
                     <button onclick="submitPresensiWithLocation()" id="submitBtn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all text-sm flex items-center justify-center space-x-2">
@@ -626,16 +632,16 @@
             const totalMins = hours * 60 + minutes;
             const dayOfWeek = now.getDay(); 
 
-            let standardPulangMins = 14 * 60 + 30;
+            let standardPulangMins = 14 * 60 + 30; // Senin - Kamis: 14:30
             if (dayOfWeek === 5) {
-                standardPulangMins = 11 * 60 + 30;
+                standardPulangMins = 11 * 60 + 30; // Jumat: 11:30
             } else if (dayOfWeek === 6) {
-                standardPulangMins = 13 * 60;
+                standardPulangMins = 13 * 60; // Sabtu: 13:00
             }
 
             let batasMulaiPulangMins = standardPulangMins - 60; 
-            const batasAkhirPulangMins = 18 * 60;
-            const batasMaksimalMasukMins = 9 * 60;
+            const batasAkhirPulangMins = 18 * 60; // 18:00
+            const batasMaksimalMasukMins = 9 * 60; // 09:00
 
             const submitBtn = document.getElementById('submitBtn');
             const timeBadge = document.getElementById('timeBadge');
@@ -898,24 +904,15 @@
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = '<span>Memeriksa...</span>';
-            btn.classList.add('btn-loading-beam');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Memeriksa...';
             errDiv.classList.add('hidden');
 
             try {
                 const result = await apiCall('verifyLogin', { nik, password });
-                
-                btn.disabled = false;
                 btn.innerHTML = '<span>Masuk Aplikasi</span><i class="fa-solid fa-arrow-right text-xs"></i>';
-                btn.classList.remove('btn-loading-beam');
-                
                 processLoginResult(result);
             } catch (err) {
-                btn.disabled = false;
                 btn.innerHTML = '<span>Masuk Aplikasi</span><i class="fa-solid fa-arrow-right text-xs"></i>';
-                btn.classList.remove('btn-loading-beam');
-                
                 errDiv.innerText = "Terjadi kesalahan sistem/koneksi.";
                 errDiv.classList.remove('hidden');
             }
